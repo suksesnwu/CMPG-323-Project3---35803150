@@ -5,18 +5,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace DeviceManagement_WebApp.Repository
 {
-    public class DevicesRepository
+    public class DevicesRepository : GenericRepository<Device>, IDevicesRepository
     {
-        private readonly ConnectedOfficeContext _context;
+        public DevicesRepository(ConnectedOfficeContext context) : base(context)
+        {
+        }
 
-        // GET: Devices
-        public List<Device> GetAll()
+        public Device GetMostRecentService()
+        {
+            return _context.Device.OrderByDescending(device => device.DateCreated).FirstOrDefault();
+        }
+
+        public override IEnumerable<Device> GetAll()
         {
             var connectedOfficeContext = _context.Device.Include(d => d.Category).Include(d => d.Zone);
             return connectedOfficeContext.ToList();
+        }
+
+        public override Device GetById(Guid? id)
+        {
+            return _context.Device
+                .Include(d => d.Category)
+                .Include(d => d.Zone)
+                .FirstOrDefault(m => m.DeviceId == id);
+        }
+
+        public IEnumerable<Category> GetCategory()
+        {
+            return _context.Category;
+        }
+
+        public IEnumerable<Zone> GetZone()
+        {
+            return _context.Zone;
         }
     }
 }

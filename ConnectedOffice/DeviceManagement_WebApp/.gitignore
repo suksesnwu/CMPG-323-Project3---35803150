@@ -343,4 +343,8 @@ healthchecksdb
 /appsettings.json
 
 # publish folder has connectionstring in it
-Publish
+publish/
+
+obj/
+
+[Pp]roperties/

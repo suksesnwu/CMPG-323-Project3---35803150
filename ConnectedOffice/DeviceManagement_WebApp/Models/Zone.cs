@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -17,8 +18,12 @@ namespace DeviceManagement_WebApp.Models
 
         [DisplayName("Zone ID")]
         public Guid ZoneId { get; set; }
+
+        [Required]
         [DisplayName("Zone Name")]
         public string ZoneName { get; set; }
+
+        [Required]
         [DisplayName("Zone Description")]
         public string ZoneDescription { get; set; }
         [DisplayName("Date Created")]

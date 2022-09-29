@@ -7,25 +7,29 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DeviceManagement_WebApp.Data;
 using DeviceManagement_WebApp.Models;
+using DeviceManagement_WebApp.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DeviceManagement_WebApp.Controllers
 {
+    [Authorize]
     public class ZonesController : Controller
     {
-        private readonly ConnectedOfficeContext _context;
-
-        public ZonesController(ConnectedOfficeContext context)
+        private readonly IZonesRepository _zonesRepository;
+        public ZonesController(IZonesRepository zonesRepository)
         {
-            _context = context;
+            _zonesRepository = zonesRepository;
         }
 
-        // GET: Zones
+        //  retrieves all Zone entries from the database
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Zone.ToListAsync());
+            var zones = _zonesRepository.GetAll();
+            await _zonesRepository.SaveChanges();
+            return View(zones);
         }
 
-        // GET: Zones/Details/5
+        // retrieve one Zone from the database based on the ID parsed through
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -33,8 +37,8 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
-            var zone = await _context.Zone
-                .FirstOrDefaultAsync(m => m.ZoneId == id);
+            var zone = _zonesRepository.GetById(id);
+            await _zonesRepository.SaveChanges();
             if (zone == null)
             {
                 return NotFound();
@@ -43,27 +47,26 @@ namespace DeviceManagement_WebApp.Controllers
             return View(zone);
         }
 
-        // GET: Zones/Create
+        // create a new Zone entry on the database
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Zones/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // create a new Zone entry on database
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ZoneId,ZoneName,ZoneDescription,DateCreated")] Zone zone)
         {
+
             zone.ZoneId = Guid.NewGuid();
-            _context.Add(zone);
-            await _context.SaveChangesAsync();
+            _zonesRepository.Add(zone);
+            await _zonesRepository.SaveChanges();
 
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Zones/Edit/5
+        // update an existing Zone entry on the database
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -71,7 +74,8 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
-            var zone = await _context.Zone.FindAsync(id);
+            var zone = _zonesRepository.GetById(id);
+            await _zonesRepository.SaveChanges();
             if (zone == null)
             {
                 return NotFound();
@@ -79,9 +83,7 @@ namespace DeviceManagement_WebApp.Controllers
             return View(zone);
         }
 
-        // POST: Zones/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // update an existing Zone entry on the database
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("ZoneId,ZoneName,ZoneDescription,DateCreated")] Zone zone)
@@ -93,8 +95,8 @@ namespace DeviceManagement_WebApp.Controllers
 
             try
             {
-                _context.Update(zone);
-                await _context.SaveChangesAsync();
+                _zonesRepository.Update(zone);
+                await _zonesRepository.SaveChanges();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -111,7 +113,7 @@ namespace DeviceManagement_WebApp.Controllers
 
         }
 
-        // GET: Zones/Delete/5
+        // delete an existing Zone entry the database
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -119,8 +121,9 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
-            var zone = await _context.Zone
-                .FirstOrDefaultAsync(m => m.ZoneId == id);
+            var zone = _zonesRepository.GetById(id);
+            await _zonesRepository.SaveChanges();
+
             if (zone == null)
             {
                 return NotFound();
@@ -129,20 +132,22 @@ namespace DeviceManagement_WebApp.Controllers
             return View(zone);
         }
 
-        // POST: Zones/Delete/5
+        // confirm an existing Zone entry on the database is deleted
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var zone = await _context.Zone.FindAsync(id);
-            _context.Zone.Remove(zone);
-            await _context.SaveChangesAsync();
+            var zone = _zonesRepository.GetById(id);
+            _zonesRepository.Remove(zone);
+            await _zonesRepository.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
+        // checks if a Zone exists (based on the ID parsed through) before editing or deleting an item
         private bool ZoneExists(Guid id)
         {
-            return _context.Zone.Any(e => e.ZoneId == id);
+            return _zonesRepository.Exists(id);
         }
     }
 }

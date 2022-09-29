@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 // Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
 // If you have enabled NRTs for your project, then un-comment the following line:
@@ -12,12 +13,16 @@ namespace DeviceManagement_WebApp.Models
     {
         [DisplayName("Device ID")]
         public Guid DeviceId { get; set; }
+
+        [Required]
         [DisplayName("Device Name")]
         public string DeviceName { get; set; }
         [DisplayName("Category ID")]
         public Guid CategoryId { get; set; }
         [DisplayName("Zone ID")]
         public Guid ZoneId { get; set; }
+
+        [Required]
         [DisplayName("Status")]
         public string Status { get; set; }
         [DisplayName("Is Active")]
