@@ -38,6 +38,7 @@ This is an <a href="https://iotsystem35803150.azurewebsites.net/" target="_blank
 
 
 ## Quick start
+Go to <a href="https://iotsystem35803150.azurewebsites.net/" target="_blank">https://iotsystem35803150.azurewebsites.net</a> to go to the web app.
 
 ### Register
 ***
