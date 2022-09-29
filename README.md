@@ -28,7 +28,7 @@
 ## General Info
 ### IoT Device Management System
 ***
-This is an IoT Web App Device Management System that helps administrators register, organise, monitor, and remotely manage all IoT devices deployed by the organisation. Users and Administrator must register/login to be authorized so that they can register IoT devices, categorise them and deploy them throughout  the  organisation's  buildings  in  predefined  zones. 
+This is an <a href="https://iotsystem35803150.azurewebsites.net/">IoT Web App Device Management System</a> that helps administrators register, organise, monitor, and remotely manage all IoT devices deployed by the organisation. Users and Administrator must register/login to be authorized so that they can register IoT devices, categorise them and deploy them throughout  the  organisation's  buildings  in  predefined  zones. 
 
 **Zones**: _Keep track of areas where the IoT devices are deployed._
 
